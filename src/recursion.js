@@ -136,9 +136,14 @@ var reverse = function(string) {
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
-  
-
-
+    string = string.toLowerCase();
+    if (string.length < 2){
+        return true;
+    }
+    if (string[0]=== string[string.length - 1]){
+       return palindrome(string.slice(1, string.length - 1));
+    }
+    return false;
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -146,35 +151,120 @@ var palindrome = function(string) {
 // modulo(5,2) // 1
 // modulo(17,5) // 2
 // modulo(22,6) // 4
-var modulo = function(x, y) {};
+var modulo = function(x, y) {
+    if (x < 0){
+        return -modulo(-x, y);
+    } else if (y < 0){
+        y = -y; 
+    } else if (y === 0){
+        return NaN;
+    } else if (x === y){
+        return 0;
+    }
+
+    if (x < y){
+        return x;
+    }
+   
+    return modulo(x - y, y);
+};
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
-var multiply = function(x, y) {};
+var multiply = function(x, y) {
+    if (x === 0 || y === 0){
+        return 0;
+    }
+
+    if (y < 0){
+        return -x + multiply(x, y + 1);
+    } else {
+        return x + multiply(x, y - 1);
+    }
+};
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
-var divide = function(x, y) {};
+var divide = function(x, y) {
+    if (x < 0 && y < 0){
+        x = -x;
+        y = -y;
+    }
+
+    if (y === 0){
+        return NaN;
+    } else if (x === 0){
+        return 0;
+    } 
+
+    if (x - y === 0){
+        return 1;
+    } else if (x - y < 0){
+        return 0;
+    }
+    
+    if (x > 0 && y > 0){
+        return 1 + divide(x - y, y);
+    } else {
+        return -divide(x + y, y)
+    }
+};
+
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
 // integers is the greatest integer that divides both x and y with no remainder.
 // gcd(4,36); // 4
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
-var gcd = function(x, y) {};
+var gcd = function(x, y) {
+  if (x < 0 || y < 0){
+      return null;
+  }
+  if (y === 0){
+      return x;
+  }
+  return gcd(y, (x % y));
+};
 
 // 15. Write a function that compares each character of two strings and returns true if
 // both are identical.
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
-var compareStr = function(str1, str2) {};
+var compareStr = function(str1, str2) {
+    if (str1[0] === undefined && str2[0] === undefined){
+        return true;
+    }
+
+    if (str1[0] === str2[0]){
+       return compareStr(str1.slice(1), str2.slice(1));
+    }
+    return false;
+};
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
-var createArray = function(str) {};
+var createArray = function(str) {
+    var letters = [];
+ 
+    if (str[0] !== undefined){
+        letters.push(str[0]);
+    } else {
+        return letters;
+    }
+
+    return letters.concat(createArray(str.slice(1)));
+};
 
 // 17. Reverse the order of an array
-var reverseArr = function(array) {};
+var reverseArr = function(array) {
+    var reversed = [];
+    if (array[0] !== undefined){
+        reversed.push(array[0]);
+    } else {
+        return reversed;
+    }
+    return reverseArr(array.slice(1)).concat([array[0]]);
+};
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
