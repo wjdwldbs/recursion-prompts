@@ -402,7 +402,17 @@ var replaceKeysInObj = function(obj, oldKey, newKey) {
 // Example: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34.....
 // fibonacci(5); // [0,1,1,2,3,5]
 // Note: The 0 is not counted.
-var fibonacci = function(n) {};
+var fibonacci = function(n) {
+    if (n <= 0){
+        return null;
+    }
+    var numbers = [0, 1];
+    for (var i = 2; i < n; i++){
+        numbers[i] = fibonacci(i - 1) + fibonacci(i - 2)
+        numbers.push(numbers[i]);        
+    }
+    return numbers;
+};
 
 // 26. Return the Fibonacci number located at index n of the Fibonacci sequence.
 // [0,1,1,2,3,5,8,13,21]
@@ -414,11 +424,32 @@ var nthFibo = function(n) {};
 // 27. Given an array of words, return a new array containing each word capitalized.
 // var words = ['i', 'am', 'learning', 'recursion'];
 // capitalizedWords(words); // ['I', 'AM', 'LEARNING', 'RECURSION']
-var capitalizeWords = function(array) {};
+var capitalizeWords = function(array) {
+    var words = [];
+    if (array.length === 0){
+        return words;
+    }
+
+    words.push(array[0].toUpperCase());
+
+    return words.concat(capitalizeWords(array.slice(1)));
+};
 
 // 28. Given an array of strings, capitalize the first letter of each index.
 // capitalizeFirst(['car','poop','banana']); // ['Car','Poop','Banana']
-var capitalizeFirst = function(array) {};
+var capitalizeFirst = function(array) {
+    var words = [];
+    var capitalizedFirstLetter;
+
+    if (array.length === 0){
+        return words;
+    }
+
+    capitalizedFirstLetter = array[0][0].toUpperCase().concat(array[0].slice(1));
+    words.push(capitalizedFirstLetter);
+
+    return words.concat(capitalizeFirst(array.slice(1)));
+};
 
 // 29. Return the sum of all even numbers in an object containing nested objects.
 // var obj1 = {
@@ -429,43 +460,140 @@ var capitalizeFirst = function(array) {};
 //   e: {e: {e: 2}, ee: 'car'}
 // };
 // nestedEvenSum(obj1); // 10
-var nestedEvenSum = function(obj) {};
+var nestedEvenSum = function(obj) {
+    var sum = 0;
+    for (var key in obj){
+        var propValue = obj[key];
+        if (propValue % 2 === 0){
+            sum += propValue;
+        }
+        if (typeof propValue === 'object'){
+            sum += nestedEvenSum(propValue);
+        }
+        
+    }
+    return sum;
+};
 
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
-var flatten = function(array) {};
+var flatten = function(array) {
+    var flatteneddArray = [];
+
+    for (var i = 0; i < array.length; i++){
+        if (!Array.isArray(array[i])){
+            flatteneddArray.push(array[i]);
+        } else {
+            flatteneddArray = flatteneddArray.concat(flatten(array[i]));
+        }
+    }
+    return flatteneddArray;
+};
 
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
-var letterTally = function(str, obj) {};
+var letterTally = function(str, obj = {}) {
+
+    if (str[0] === undefined){
+        return obj;
+    }
+
+    if (str[0] in obj){
+        obj[str[0]]++;
+    } else {
+        obj[str[0]] = 1;
+    }
+
+    return letterTally(str.slice(1), obj);
+};
 
 // 32. Eliminate consecutive duplicates in a list. If the list contains repeated
 // elements they should be replaced with a single copy of the element. The order of the
 // elements should not be changed.
 // compress([1,2,2,3,4,4,5,5,5]) // [1,2,3,4,5]
 // compress([1,2,2,3,4,4,2,5,5,5,4,4]) // [1,2,3,4,2,5,4]
-var compress = function(list) {};
+var compress = function(list) {
+    if (list.length < 2){
+        return list;
+    }
+
+    if (list[0] === list[1]){
+        return compress(list.slice(1));
+    } else {
+        return [list[0]].concat(compress(list.slice(1)));
+    }
+};
 
 // 33. Augment every element in a list with a new value where each element is an array
 // itself.
 // augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
-var augmentElements = function(array, aug) {};
+var augmentElements = function(array, aug) {
+    if (array.length === 0){
+        return array;
+    }
+    array[0].push(aug); 
+
+    return [array[0]].concat(augmentElements(array.slice(1), aug));
+};
 
 // 34. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
 // minimizeZeroes([2,0,0,0,1,0,0,4]) // [2,0,1,0,4]
-var minimizeZeroes = function(array) {};
+var minimizeZeroes = function(array) {
+    if(array.length === 0){
+        return array;
+    }
+    if (array[0] === 0 && array[1] === 0){
+        return minimizeZeroes(array.slice(1));
+    } else {
+        return [array[0]].concat(minimizeZeroes(array.slice(1)));
+    }
+};
 
 // 35. Alternate the numbers in an array between positive and negative regardless of
 // their original sign. The first number in the index always needs to be positive.
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
-var alternateSign = function(array) {};
+var alternateSign = function(array) {
+    var numbers = [];
+    
+    if(array[0] === undefined || array[1] === undefined){
+        return numbers;
+    }
+
+    if (array[0] < 0){
+        array[0] = array[0] * -1;
+    }
+    if (array[1] > 0){
+        array[1] = array[1] * -1;
+    }
+
+    numbers.push(array[0], array[1]);
+
+    return numbers.concat(alternateSign(array.slice(2)));
+};
 
 // 36. Given a string, return a string with digits converted to their word equivalent.
 // Assume all numbers are single digits (less than 10).
 // numToText("I have 5 dogs and 6 ponies"); // "I have five dogs and six ponies"
-var numToText = function(str) {};
+var numToText = function(str) {
+    var numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+    var words = str.split('');
+
+    if (str[0] === undefined){
+        return '';
+    }
+
+    if (typeof words[0] === 'number'){
+       words[0] = numbers[words[0] - 1];
+       str = str.join('');
+       return words[0].concat(numToText(str.slice(1))); 
+        
+    }
+    
+    return words[0].concat(numToText(str.slice(1)));   
+    
+};
 
 // *** EXTRA CREDIT ***
 
